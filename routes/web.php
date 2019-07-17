@@ -14,3 +14,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->get('login', 'AuthController.login');
+});
