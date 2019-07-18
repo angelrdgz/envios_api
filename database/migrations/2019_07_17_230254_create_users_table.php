@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
                 $table->string('password', 60);
                 $table->string('api_key', 250)->nullable();
                 $table->integer('type_id');
+                $table->boolean('business')->default(false);
                 $table->string('hash', 16)->nullable();
                 $table->string('photo', 250)->nullable();
                 $table->string('phone', 15);
