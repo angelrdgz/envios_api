@@ -13,12 +13,23 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('user_types')){
-        }
-        Schema::create('locations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('locations')){
+            Schema::create('locations', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('user_id');
+                $table->integer('type_id');
+                $table->text('address');
+                $table->text('address2');
+                $table->string('city',80);
+                $table->string('state',50);
+                $table->string('country',50);
+                $table->string('zipcode',6);
+                $table->text('reference');
+                $table->string('nickname',120);
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }        
     }
 
     /**

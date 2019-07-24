@@ -16,7 +16,7 @@ class CreateLocationTypesTable extends Migration
         if(!Schema::hasTable('location_types')){
             Schema::create('location_types', function (Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->timestamps();
+                $table->string('name', 50);
             });
         }        
     }

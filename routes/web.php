@@ -22,4 +22,11 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
         $router->post('register', 'AuthController@register');
         $router->get('profile', 'AuthController@getUser');
     });
+
+    $router->group(['prefix' => 'shipments'], function () use ($router) {
+        $router->get('/', 'ShipmentController@index');
+        $router->post('/', 'ShipmentController@store');
+        $router->get('/{id}', 'ShipmentController@show');
+        $router->delete('/{id}', 'ShipmentController@destroy');
+    });
 });

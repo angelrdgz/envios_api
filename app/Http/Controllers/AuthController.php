@@ -32,7 +32,7 @@ class AuthController extends Controller
             if (Hash::check($request->input('password'), $user->password)) {
                 $apikey = base64_encode(str_random(40));
                 User::where('email', $request->input('email'))->update(['api_key' => "$apikey"]);;
-                return response()->json(['status' => 'success', 'api_key' => $apikey]);
+                return response()->json(['status' => 'success', 'api_key' => $apikey,'user'=>$user]);
             } else {
                 return response()->json(['status' => 'fail'], 401);
             }
