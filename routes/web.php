@@ -24,9 +24,22 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
     });
 
     $router->group(['prefix' => 'shipments'], function () use ($router) {
+
         $router->get('/', 'ShipmentController@index');
         $router->post('/', 'ShipmentController@store');
         $router->get('/{id}', 'ShipmentController@show');
         $router->delete('/{id}', 'ShipmentController@destroy');
+
+    });
+
+    $router->group(['prefix' => 'packages'], function () use ($router) {
+
+        $router->get('/', 'PackageController@index');
+        $router->post('/', 'PackageController@store');
+        $router->get('/{id}', 'PackageController@show');
+        $router->put('/{id}', 'PackageController@update');
+        $router->delete('/{id}', 'PackageController@destroy');
+
+
     });
 });
