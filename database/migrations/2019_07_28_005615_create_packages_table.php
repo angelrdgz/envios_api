@@ -19,7 +19,7 @@ class CreatePackagesTable extends Migration
                 $table->integer('user_id');
                 $table->string('name', 100);
                 $table->string('type', 100);
-                $table->boolean('status')->default(0);
+                $table->boolean('status')->default(1);
                 $table->decimal('height', 6,2);
                 $table->decimal('width', 6,2);
                 $table->decimal('length', 6,2);
