@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
                 $table->string('name', 150);
                 $table->string('lastname', 150);
                 $table->string('email', 200);
+                $table->integer('compnay_id')->nullable();
                 $table->dateTime('email_verified_at')->nullable();
                 $table->string('password', 60);
                 $table->string('api_key', 250)->nullable();
