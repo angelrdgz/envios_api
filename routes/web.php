@@ -50,4 +50,11 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
 
 
     });
+
+    $router->group(['prefix' => 'srenvio'], function () use ($router) {
+
+        $router->post('/quote', 'SrEnvioController@quote');
+
+
+    });
 });
