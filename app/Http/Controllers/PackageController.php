@@ -15,7 +15,7 @@ class PackageController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -25,7 +25,7 @@ class PackageController extends Controller
      */
     public function index(Request $request)
     {
-        $packages = Package::all();//Auth::user()->shipments()->get();
+        $packages = Auth::user()->packages()->get();
         return response()->json(['status' => 'success', 'data' => $packages], 200);
     }
 
@@ -42,7 +42,7 @@ class PackageController extends Controller
         ]);
 
         $packages = new Package();
-        $packages->user_id = 1;
+        $packages->user_id = Auth::user()->id;
         $packages->name = $request->input('name');
         $packages->type = $request->input('type');
         $packages->height = $request->input('height');
@@ -89,8 +89,7 @@ class PackageController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $shipment = Shipment::find($id);
-        $shipment->status = 'CANCELLED';
+        $shipment = Package::find($id);
         $shipment->delete();
         return response()->json(['status' => 'success', 'message' => 'Shipment cancelled successfully'], 200);
     }

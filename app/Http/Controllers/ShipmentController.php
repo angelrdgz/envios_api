@@ -16,7 +16,7 @@ class ShipmentController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -26,7 +26,7 @@ class ShipmentController extends Controller
      */
     public function index(Request $request)
     {
-        $shipments = Shipment::all();//Auth::user()->shipments()->get();
+        $shipments = Auth::user()->shipments()->with('origen','destination')->get();
         return response()->json(['status' => 'success', 'data' => $shipments], 200);
     }
 

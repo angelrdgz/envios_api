@@ -11,13 +11,13 @@ class LocationController extends Controller
 
     public function getOrigenes()
     {
-        $locations = Location::where('type_id', 1)->get();//Auth::user()->shipments()->get();
+        $locations = Auth::user()->origenes()->get();
         return response()->json(['status' => 'success', 'data' => $locations], 200);
     }
 
     public function getDestinations()
     {
-        $locations = Location::where('type_id', 2)->get();//Auth::user()->shipments()->get();
+        $locations =  Auth::user()->destinations()->get();
         return response()->json(['status' => 'success', 'data' => $locations], 200);
     }
 }
