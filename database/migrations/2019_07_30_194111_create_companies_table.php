@@ -13,14 +13,16 @@ class CreateCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('owner_id')->nullable();
-            $table->string('name',200)->nullable();
-            $table->string('address')->nullable();
-            $table->decimal('balance',12,2);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('companies')) {
+            Schema::create('companies', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('owner_id')->nullable();
+                $table->string('name', 200)->nullable();
+                $table->string('address')->nullable();
+                $table->decimal('balance', 12, 2);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

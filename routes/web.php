@@ -43,10 +43,15 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
 
     });
 
+    $router->group(['prefix' => 'countries'], function () use ($router) {
+        $router->get('/', 'CountryController@index');
+    });
+
     $router->group(['prefix' => 'locations'], function () use ($router) {
 
         $router->get('/get-origenes', 'LocationController@getOrigenes');
         $router->get('/get-destinations', 'LocationController@getDestinations');
+        $router->get('/{id}', 'LocationController@show');
 
 
     });
