@@ -8,6 +8,7 @@
         "php": ">=7.1.3",
         "laravel/lumen-framework": "5.8.*",
         "maxsky/lumen-app-key-generator": "^1.0",
+        "mercadopago/dx-php": "dev-master",
         "vluzrmos/lumen-cors": "2.1.*"
     },
     "require-dev": {

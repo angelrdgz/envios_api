@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\User;
-
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
@@ -59,6 +58,7 @@ class AuthController extends Controller
         $user->type_id = $request->input('type_id');
         $user->business = $request->input('business');
         $user->phone = $request->input('phone');
+        $user->mp_token = RechargeController::createCustomer($request->input('email'));
         $user->save();
 
         return response()->json(['status' => 'success', 'result' => $user]);
