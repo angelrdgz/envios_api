@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -20,27 +21,34 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(),[
             'email' => 'required',
             'password' => 'required'
+        ],
+        [
+            'email.required' => 'Su email es requerido',
+            'password.required' => 'Su contraseña es requerida',
         ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 'fail','errors'=>$validator->errors()], 422);
+        }
         $user = User::where('email', $request->input('email'))->first();
         if (is_null($user)) {
-            return response()->json(['status' => 'fail'], 401);
+            return response()->json(['status' => 'fail', 'errors'=>["credentials"=>"Email o contraseña incorrectos"]], 422);
         } else {
             if (Hash::check($request->input('password'), $user->password)) {
                 $apikey = base64_encode(str_random(40));
                 User::where('email', $request->input('email'))->update(['api_key' => "$apikey"]);;
                 return response()->json(['status' => 'success', 'api_key' => $apikey,'user'=>$user]);
             } else {
-                return response()->json(['status' => 'fail'], 401);
+                return response()->json(['status' => 'fail', 'errors'=>["credentials"=>"Email o contraseña incorrectos"]], 422);
             }
         }
     }
 
     public function register(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(),[
             'name' => 'required',
             'lastname' => 'required',
             'email' => 'required|unique:users',
@@ -49,6 +57,10 @@ class AuthController extends Controller
             'business' => 'required',
             'phone' => 'required',
         ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['status' => 'fail','errors'=>$validator->errors()], 422);
+        }
 
         $user = new User();
         $user->name = $request->input('name');
