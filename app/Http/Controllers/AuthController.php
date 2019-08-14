@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Mail;
 
 class AuthController extends Controller
 {
@@ -21,6 +22,14 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $data = array('name'=>"Virat Gandhi");
+   
+      Mail::send('emails.welcome', $data, function($message) {
+         $message->to('abc@gmail.com', 'Tutorials Point')->subject('Laravel Basic Testing Mail');
+         $message->from('xyz@gmail.com','Virat Gandhi');
+      });
+      echo "Basic Email Sent. Check your inbox.";
+
         $validator = Validator::make($request->all(),[
             'email' => 'required',
             'password' => 'required'
@@ -57,7 +66,7 @@ class AuthController extends Controller
             'business' => 'required',
             'phone' => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['status' => 'fail','errors'=>$validator->errors()], 422);
         }
