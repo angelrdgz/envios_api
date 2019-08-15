@@ -1,6 +1,7 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
+
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -92,146 +93,146 @@
 			table-layout:fixed !important;
 		}
 		h1{
-		 color:#222222;
-		 font-family:Helvetica;
-		 font-size:40px;
-		 font-style:normal;
-		 font-weight:bold;
-		 line-height:150%;
-		 letter-spacing:normal;
-		 text-align:center;
+			color:#222222;
+			font-family:Helvetica;
+			font-size:40px;
+			font-style:normal;
+			font-weight:bold;
+			line-height:150%;
+			letter-spacing:normal;
+			text-align:center;
 		}
 		h2{
-		 color:#222222;
-		 font-family:Helvetica;
-		 font-size:34px;
-		 font-style:normal;
-		 font-weight:bold;
-		 line-height:150%;
-		 letter-spacing:normal;
-		 text-align:left;
+			color:#222222;
+			font-family:Helvetica;
+			font-size:34px;
+			font-style:normal;
+			font-weight:bold;
+			line-height:150%;
+			letter-spacing:normal;
+			text-align:left;
 		}
 		h3{
-		 color:#444444;
-		 font-family:Helvetica;
-		 font-size:22px;
-		 font-style:normal;
-		 font-weight:bold;
-		 line-height:150%;
-		 letter-spacing:normal;
-		 text-align:left;
+			color:#444444;
+			font-family:Helvetica;
+			font-size:22px;
+			font-style:normal;
+			font-weight:bold;
+			line-height:150%;
+			letter-spacing:normal;
+			text-align:left;
 		}
 		h4{
-		 color:#949494;
-		 font-family:Georgia;
-		 font-size:20px;
-		 font-style:italic;
-		 font-weight:normal;
-		 line-height:125%;
-		 letter-spacing:normal;
-		 text-align:left;
+			color:#949494;
+			font-family:Georgia;
+			font-size:20px;
+			font-style:italic;
+			font-weight:normal;
+			line-height:125%;
+			letter-spacing:normal;
+			text-align:left;
 		}
 		#templateHeader{
-		 background-color:#161616;
-		 background-image:none;
-		 background-repeat:no-repeat;
-		 background-position:center;
-		 background-size:cover;
-		 border-top:0;
-		 border-bottom:0;
-		 padding-top:15px;
-		 padding-bottom:15px;
+			background-color:#050505;
+			background-image:none;
+			background-repeat:no-repeat;
+			background-position:center;
+			background-size:cover;
+			border-top:0;
+			border-bottom:0;
+			padding-top:45px;
+			padding-bottom:45px;
 		}
 		.headerContainer{
-		 background-color:transparent;
-		 background-image:none;
-		 background-repeat:no-repeat;
-		 background-position:center;
-		 background-size:cover;
-		 border-top:0;
-		 border-bottom:0;
-		 padding-top:0;
-		 padding-bottom:0;
+			background-color:transparent;
+			background-image:none;
+			background-repeat:no-repeat;
+			background-position:center;
+			background-size:cover;
+			border-top:0;
+			border-bottom:0;
+			padding-top:0;
+			padding-bottom:0;
 		}
 		.headerContainer .mcnTextContent,.headerContainer .mcnTextContent p{
-		 color:#757575;
-		 font-family:Helvetica;
-		 font-size:16px;
-		 line-height:150%;
-		 text-align:left;
+			color:#757575;
+			font-family:Helvetica;
+			font-size:16px;
+			line-height:150%;
+			text-align:left;
 		}
 		.headerContainer .mcnTextContent a,.headerContainer .mcnTextContent p a{
-		 color:#007C89;
-		 font-weight:normal;
-		 text-decoration:underline;
+			color:#007C89;
+			font-weight:normal;
+			text-decoration:underline;
 		}
 		#templateBody{
-		 background-color:#FFFFFF;
-		 background-image:none;
-		 background-repeat:no-repeat;
-		 background-position:center;
-		 background-size:cover;
-		 border-top:0;
-		 border-bottom:0;
-		 padding-top:36px;
-		 padding-bottom:45px;
+			background-color:#FFFFFF;
+			background-image:none;
+			background-repeat:no-repeat;
+			background-position:center;
+			background-size:cover;
+			border-top:0;
+			border-bottom:0;
+			padding-top:36px;
+			padding-bottom:45px;
 		}
 		.bodyContainer{
-		 background-color:transparent;
-		 background-image:none;
-		 background-repeat:no-repeat;
-		 background-position:center;
-		 background-size:cover;
-		 border-top:0;
-		 border-bottom:0;
-		 padding-top:0;
-		 padding-bottom:0;
+			background-color:transparent;
+			background-image:none;
+			background-repeat:no-repeat;
+			background-position:center;
+			background-size:cover;
+			border-top:0;
+			border-bottom:0;
+			padding-top:0;
+			padding-bottom:0;
 		}
 		.bodyContainer .mcnTextContent,.bodyContainer .mcnTextContent p{
-		 color:#757575;
-		 font-family:Helvetica;
-		 font-size:16px;
-		 line-height:150%;
-		 text-align:left;
+			color:#757575;
+			font-family:Helvetica;
+			font-size:16px;
+			line-height:150%;
+			text-align:left;
 		}
 		.bodyContainer .mcnTextContent a,.bodyContainer .mcnTextContent p a{
-		 color:#007C89;
-		 font-weight:normal;
-		 text-decoration:underline;
+			color:#007C89;
+			font-weight:normal;
+			text-decoration:underline;
 		}
 		#templateFooter{
-		 background-color:#333333;
-		 background-image:none;
-		 background-repeat:no-repeat;
-		 background-position:center;
-		 background-size:cover;
-		 border-top:0;
-		 border-bottom:0;
-		 padding-top:45px;
-		 padding-bottom:63px;
+			background-color:#333333;
+			background-image:none;
+			background-repeat:no-repeat;
+			background-position:center;
+			background-size:cover;
+			border-top:0;
+			border-bottom:0;
+			padding-top:45px;
+			padding-bottom:63px;
 		}
 		.footerContainer{
-		 background-color:transparent;
-		 background-image:none;
-		 background-repeat:no-repeat;
-		 background-position:center;
-		 background-size:cover;
-		 border-top:0;
-		 border-bottom:0;
-		 padding-top:0;
-		 padding-bottom:0;
+			background-color:transparent;
+			background-image:none;
+			background-repeat:no-repeat;
+			background-position:center;
+			background-size:cover;
+			border-top:0;
+			border-bottom:0;
+			padding-top:0;
+			padding-bottom:0;
 		}
 		.footerContainer .mcnTextContent,.footerContainer .mcnTextContent p{
-		 color:#FFFFFF;
-		 font-family:Helvetica;
-		 font-size:12px;
-		 line-height:150%;
-		 text-align:center;
+			color:#FFFFFF;
+			font-family:Helvetica;
+			font-size:12px;
+			line-height:150%;
+			text-align:center;
 		}
 		.footerContainer .mcnTextContent a,.footerContainer .mcnTextContent p a{
-		 color:#FFFFFF;
-		 font-weight:normal;
-		 text-decoration:underline;
+			color:#FFFFFF;
+			font-weight:normal;
+			text-decoration:underline;
 		}
 	@media only screen and (min-width:768px){
 		.templateContainer{
@@ -323,57 +324,55 @@
 
 }	@media only screen and (max-width: 480px){
 		h1{
-		 font-size:30px !important;
-		 line-height:125% !important;
+			font-size:30px !important;
+			line-height:125% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
-
 		h2{
-		 font-size:26px !important;
-		 line-height:125% !important;
+			font-size:26px !important;
+			line-height:125% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
 		h3{
-		 font-size:20px !important;
-		 line-height:150% !important;
+			font-size:20px !important;
+			line-height:150% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
 		h4{
-		 font-size:18px !important;
-		 line-height:150% !important;
+			font-size:18px !important;
+			line-height:150% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
 		.mcnBoxedTextContentContainer .mcnTextContent,.mcnBoxedTextContentContainer .mcnTextContent p{
-		 font-size:14px !important;
-		 line-height:150% !important;
+			font-size:14px !important;
+			line-height:150% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
 		.headerContainer .mcnTextContent,.headerContainer .mcnTextContent p{
-		 font-size:16px !important;
-		 line-height:150% !important;
+			font-size:16px !important;
+			line-height:150% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
-
 		.bodyContainer .mcnTextContent,.bodyContainer .mcnTextContent p{
-		 font-size:16px !important;
-		 line-height:150% !important;
+			font-size:16px !important;
+			line-height:150% !important;
 		}
 
 }	@media only screen and (max-width: 480px){
 		.footerContainer .mcnTextContent,.footerContainer .mcnTextContent p{
-		 font-size:14px !important;
-		 line-height:150% !important;
+			font-size:14px !important;
+			line-height:150% !important;
 		}
 
 }</style></head>
     <body>
-        <span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span><!--<![endif]-->
+        <span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span>
         <center>
             <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
                 <tr>
@@ -392,7 +391,7 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
                         
-                            <h1><span style="color:#FFFFFF">SHIP2GO</span></h1>
+                            <div style="text-align: center;"><span style="font-size:48px"><strong><span style="color:#FFFFFF">SHIP2GO</span></strong></span></div>
 
                         </td>
                     </tr>
@@ -418,13 +417,11 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
                         
-                            <h3 style="text-align: center;">Bienvenido a SHIP2GO</h3>
+                            <h3 style="text-align: center;"><span style="font-size:18px">Activa tu Cuenta</span></h3>
 
-<p><b>{{$user->name}} {{$user->lastname}}</b> estamos emocionados de que hayas concluido con tu proceso de registro con nosotros.&nbsp;<br>
-<br>
-Uno de nuestros ejecutivos de ventas te contactara para ayudarte con una introdución de nuestra plataforma y te asesorara con cualquier duda que puedas tener con el uso de nuestra plataforma.<br>
-<br>
-De todo el equipo de <strong><a href="http://a.com" target="_blank">shio2go</a></strong>, te agradecemos por confiar en nosotros y te damos la bienvenida.</p>
+<p>Hola {{$user->name}} {{$user->lastname}}, solo falta un paso para poder ingresar a tu cuenta en <a href="http://ship2go.com" target="_blank">ship2go.com</a> y disfrutar de todos los beneficios que nuestra plataforma te ofrece.</p>
+
+<p>Solo debes de dar click en el siguiente botón para poder activar tu cuenta y entrar a tu perfil</p>
 
                         </td>
                     </tr>
@@ -432,7 +429,25 @@ De todo el equipo de <strong><a href="http://a.com" target="_blank">shio2go</a><
             </td>
         </tr>
     </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 4px;background-color: #2BAADF;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 18px;">
+                                <a class="mcnButton " title="Activar tu Cuenta" href="{{$link}}" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Activar tu Cuenta</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
     <tbody class="mcnDividerBlockOuter">
         <tr>
             <td class="mcnDividerBlockInner" style="min-width:100%; padding:18px;">
@@ -443,65 +458,6 @@ De todo el equipo de <strong><a href="http://a.com" target="_blank">shio2go</a><
                         </td>
                     </tr>
                 </tbody></table>
-            </td>
-        </tr>
-    </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnCaptionBlock">
-    <tbody class="mcnCaptionBlockOuter">
-        <tr>
-            <td class="mcnCaptionBlockInner" valign="top" style="padding:9px;">
-                
-
-<table align="left" border="0" cellpadding="0" cellspacing="0" class="mcnCaptionBottomContent" width="282">
-    <tbody><tr>
-        <td class="mcnCaptionBottomImageContent" align="center" valign="top" style="padding:0 9px 9px 9px;">
-        
-            
-
-            <img alt="" src="https://cdn-images.mailchimp.com/template_images/gallery/sell-products-sm1.png" width="264" style="max-width:264px;" class="mcnImage">
-            
-        
-        </td>
-    </tr>
-    <tr>
-        <td class="mcnTextContent" valign="top" style="padding:0 9px 0 9px;" width="282">
-            <h4>Related Service</h4>
-
-<p>Some information of an awesome feuture of ship2go</p>
-
-<p><a href="#">View similar products »</a></p>
-
-        </td>
-    </tr>
-</tbody></table>
-
-<table align="right" border="0" cellpadding="0" cellspacing="0" class="mcnCaptionBottomContent" width="282">
-    <tbody><tr>
-        <td class="mcnCaptionBottomImageContent" align="center" valign="top" style="padding:0 9px 9px 9px;">
-        
-            
-
-            <img alt="" src="https://cdn-images.mailchimp.com/template_images/gallery/sell-products-sm2.png" width="264" style="max-width:264px;" class="mcnImage">
-            
-        
-        </td>
-    </tr>
-    <tr>
-        <td class="mcnTextContent" valign="top" style="padding:0 9px 0 9px;" width="282">
-            <h4>Another Feature</h4>
-
-<p>Description of something incredible made for us</p>
-
-<p><a href="#">Shop the sale »</a></p>
-
-        </td>
-    </tr>
-</tbody></table>
-
-
-
-
-
             </td>
         </tr>
     </tbody>
@@ -526,7 +482,7 @@ De todo el equipo de <strong><a href="http://a.com" target="_blank">shio2go</a><
                     <td align="center" valign="top" style="padding-top:9px; padding-right:9px; padding-left:9px;">
                         <table align="center" border="0" cellpadding="0" cellspacing="0">
                             <tbody><tr>
-                                <td align="center" valign="top">
+                                <td align="center" valign="top">                                     
                                             <table align="left" border="0" cellpadding="0" cellspacing="0" style="display:inline;">
                                                 <tbody><tr>
                                                     <td valign="top" style="padding-right:10px; padding-bottom:9px;" class="mcnFollowContentItemContainer">
@@ -548,7 +504,7 @@ De todo el equipo de <strong><a href="http://a.com" target="_blank">shio2go</a><
                                                         </tbody></table>
                                                     </td>
                                                 </tr>
-                                            </tbody></table>                                        
+                                            </tbody></table>                                      
                                         
                                             <table align="left" border="0" cellpadding="0" cellspacing="0" style="display:inline;">
                                                 <tbody><tr>
@@ -571,8 +527,7 @@ De todo el equipo de <strong><a href="http://a.com" target="_blank">shio2go</a><
                                                         </tbody></table>
                                                     </td>
                                                 </tr>
-                                            </tbody></table>                                       
-                                        
+                                            </tbody></table>                                        
                                             <table align="left" border="0" cellpadding="0" cellspacing="0" style="display:inline;">
                                                 <tbody><tr>
                                                     <td valign="top" style="padding-right:10px; padding-bottom:9px;" class="mcnFollowContentItemContainer">

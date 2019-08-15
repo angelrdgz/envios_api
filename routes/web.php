@@ -15,12 +15,15 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->get('test-email', 'AuthController@testEmail');
+
 $router->group(['prefix' => 'api/'], function () use ($router) {
 
     $router->group(['prefix' => 'auth/'], function () use ($router) {
         $router->post('login', 'AuthController@login');
         $router->post('register', 'AuthController@register');
         $router->get('profile', 'AuthController@getUser');
+        $router->get('active-account/{hash}', 'AuthController@activeAccount');
     });
 
     $router->group(['prefix' => 'shipments'], function () use ($router) {
