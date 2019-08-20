@@ -32,12 +32,15 @@ class ShipmentController extends Controller
 
     public function store(Request $request)
     {
+
+        var_dump('Cosas', $request->all());
+        dd();
         $this->validate($request, [
             'api_id' => 'required',
             'price' => 'required'
         ]);
 
-        if (!is_null($request->input('origin_id'))) {
+        if (!is_null($request->input('extraInfo'->origen->id))) {
             $origin = Location::find($request->input('origin_id'));
         } else {
             $origin = new Location();
