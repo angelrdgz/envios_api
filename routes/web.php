@@ -30,6 +30,16 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
 
         $router->get('/', 'ShipmentController@index');
         $router->post('/', 'ShipmentController@store');
+        $router->post('/create-label', 'ShipmentController@createLabel');
+        $router->get('/{id}', 'ShipmentController@show');
+        $router->delete('/{id}', 'ShipmentController@destroy');
+
+    });
+
+    $router->group(['prefix' => 'shipments'], function () use ($router) {
+
+        $router->get('/', 'ShipmentController@index');
+        $router->post('/', 'ShipmentController@store');
         $router->get('/{id}', 'ShipmentController@show');
         $router->delete('/{id}', 'ShipmentController@destroy');
 

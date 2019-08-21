@@ -77,6 +77,25 @@ class SrEnvioController extends Controller
         return json_decode($result, true);
     }
 
+    public function labelTest($data)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, env('SRENVIO_ENDPOINT').'/labels');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Token token='.env('SRENVIO_TOKEN'),
+            "Content-Type: application/json"
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        return json_decode($result, true);
+    }
+
     public function label(Request $request)
     {
         $ch = curl_init();
