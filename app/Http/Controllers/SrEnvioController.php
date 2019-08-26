@@ -114,4 +114,24 @@ class SrEnvioController extends Controller
 
         return response()->json(['status' => 'success', 'data' => json_decode($result, true)], 200);
     }
+
+    public function cancelShipment($data){
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, env('SRENVIO_ENDPOINT').'/cancel_label_requests');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Token token='.env('SRENVIO_TOKEN'),
+            "Content-Type: application/json"
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        return json_decode($result, true);
+
+    }
 }

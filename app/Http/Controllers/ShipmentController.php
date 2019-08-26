@@ -64,6 +64,18 @@ class ShipmentController extends Controller
         $shipInfo = $request->input('shipment');
         $extraInfo = $request->input('extraInfo');
         $labelInfo = $request->input('label');
+
+        if(!is_null(Auth::user()->company_id)){
+            if( Auth::user()->company->balance < $labelInfo["price"]){
+                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
+            }
+        }else{
+            if( Auth::user()->balance < $labelInfo["price"]){
+                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
+            }
+        }
+
+        
         if (!is_null($extraInfo["origen"]["id"])) {
             $origin = Location::find($extraInfo["origen"]["id"]);
         } else {
@@ -132,9 +144,17 @@ class ShipmentController extends Controller
         $shipment->destination_id = $destination->id;
         $shipment->save();
 
-       
+        if(!is_null(Auth::user()->company_id)){
+            $company = Company::find(Auth::user()->company->id);
+            $company->balance = Auth::user()->company->balance - $price;
+            $company->save();
+        }else{
+            $user = User::find(Auth::user()->id);
+            $user->balance = Auth::user()->balance - $price;
+            $user->save();
+        }
 
-
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', "rates"=>$rates,'shipment_id'=>$srEnvioShip["data"]["id"]], 200);
     }
 
     public function show($id)
@@ -146,8 +166,12 @@ class ShipmentController extends Controller
     public function destroy(Request $request, $id)
     {
         $shipment = Shipment::find($id);
+
+        $srEnvio = new SrEnvioController();
+        $srEnvioShip = $srEnvio->cancelShipment(["tracking_number"=>$shipment->tracking_number,"reason"=>"Datos de dirección erróneos."]);
+        
         $shipment->status = 'CANCELLED';
-        $shipment->delete();
-        return response()->json(['status' => 'success', 'message' => 'Shipment cancelled successfully'], 200);
+        $shipment->save();
+        return response()->json(['status' => 'success', 'message' => $srEnvioShip], 200);
     }
 }

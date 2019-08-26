@@ -60,6 +60,10 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
         $router->get('/', 'CountryController@index');
     });
 
+    $router->group(['prefix' => 'recharges'], function () use ($router) {
+        $router->post('/', 'RecargeController@makePayment');
+    });
+
     $router->group(['prefix' => 'locations'], function () use ($router) {
 
         $router->get('/get-origenes', 'LocationController@getOrigenes');

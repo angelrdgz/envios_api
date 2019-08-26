@@ -29,6 +29,27 @@ class RechargeController extends Controller
         return $customer->id;
     }
 
+    public function makePayment(Request $request)
+    {
+        return response()->json($request->all());
+
+        MercadoPago\SDK::setAccessToken(env("MP_TOKEN_SANDBOX"));
+        $payment = new MercadoPago\Payment();
+        $payment->transaction_amount = 140;
+        $payment->token = "3749ea44f4497c0343eaa7845c3476c9";
+        $payment->description = "Enormous Silk Pants";
+        $payment->installments = 1;
+        $payment->payment_method_id = "visa";
+        $payment->payer = array(
+        "email" => "idell@yahoo.com"
+        );
+        // Save and posting the payment
+        $payment->save();
+        //...
+        // Print the payment status
+        echo $payment->status;
+    }
+
     private function getCustomer($token)
     {
 
