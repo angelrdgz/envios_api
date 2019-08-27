@@ -61,7 +61,12 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
     });
 
     $router->group(['prefix' => 'recharges'], function () use ($router) {
-        $router->post('/', 'RecargeController@makePayment');
+        $router->get('/', 'RechargeController@index');
+        $router->post('/', 'RechargeController@makePayment');
+    });
+
+    $router->group(['prefix' => 'ezcmd'], function () use ($router) {
+        $router->post('/get-locations', 'EZCMDController@getLocations');
     });
 
     $router->group(['prefix' => 'locations'], function () use ($router) {

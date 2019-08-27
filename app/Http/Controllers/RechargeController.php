@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Package;
+use App\Payment;
+use App\User;
+use App\Company;
 use Auth;
 use MercadoPago;
 
@@ -20,6 +22,11 @@ class RechargeController extends Controller
         
     }
 
+    public function index(Request $request){
+        $recharges = Auth::user()->payments;
+        return response()->json(["data"=>$recharges]);
+    }
+
     public static function createCustomer($email)
     {
         MercadoPago\SDK::setAccessToken(env("MP_TOKEN_SANDBOX"));
@@ -31,23 +38,41 @@ class RechargeController extends Controller
 
     public function makePayment(Request $request)
     {
-        return response()->json($request->all());
-
         MercadoPago\SDK::setAccessToken(env("MP_TOKEN_SANDBOX"));
         $payment = new MercadoPago\Payment();
         $payment->transaction_amount = 140;
-        $payment->token = "3749ea44f4497c0343eaa7845c3476c9";
-        $payment->description = "Enormous Silk Pants";
+        $payment->token = $request->token;
+        $payment->description = "Deposito a Ship2go";
         $payment->installments = 1;
-        $payment->payment_method_id = "visa";
+        $payment->payment_method_id = $request->paymentMethodId;
         $payment->payer = array(
-        "email" => "idell@yahoo.com"
+        "email" =>'angel@x.com'
         );
         // Save and posting the payment
         $payment->save();
-        //...
-        // Print the payment status
-        echo $payment->status;
+        if($payment->status == 'approved'){
+
+            $pay = new Payment();
+            $pay->mp_id = $payment->id;
+            $pay->user_id = Auth::user()->id;
+            $pay->payment_method = $payment->payment_method_id;
+            $pay->status = $payment->status;
+            $pay->total = $request->total;
+            $pay->card = substr($request->cardNumber, 11, 4);
+            $pay->save();
+
+            if(!is_null(Auth::user()->company_id)){
+                $company = Company::find(Auth::user()->company->id);
+                $company->balance = Auth::user()->company->balance + $request->total;
+                $company->save();
+            }else{
+                $user = User::find(Auth::user()->id);
+                $user->balance = Auth::user()->balance + $request->total;
+                $user->save();
+            }
+
+        }
+        return response()->json(['status'=>'success', 'message'=>'Payment created successfully'], 200);
     }
 
     private function getCustomer($token)

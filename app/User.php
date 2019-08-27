@@ -41,6 +41,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany('App\Package', 'user_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany('App\Payment', 'user_id');
+    }
+
+    public function invoice()
+    {
+        return $this->hasMany('App\Invoice', 'user_id');
+    }
+
     public function origenes()
     {
         return $this->hasMany('App\Location', 'user_id')->where('type_id', 1);
