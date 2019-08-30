@@ -24,6 +24,8 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
         $router->post('register', 'AuthController@register');
         $router->get('profile', 'AuthController@getUser');
         $router->get('active-account/{hash}', 'AuthController@activeAccount');
+        $router->post('forgot-password', 'AuthController@forgotPassword');
+        $router->get('restore-password/{hash}', 'AuthController@restorePassword');
     });
 
     $router->group(['prefix' => 'shipments'], function () use ($router) {

@@ -130,6 +130,40 @@ class AuthController extends Controller
         return response()->json(['status' => 'success', 'result' => $user]);
     }
 
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'fail', 'errors' => $validator->errors()], 422);
+        }
+
+      $user = User::where('email', $request->email)->first();
+
+      if(is_null($user)){
+        return response()->json(['status' => 'fail', 'message' => 'User not found'], 422);
+      }else{
+        $user->hash = $this->randomString(16);
+        $user->save();
+
+
+        $link = env("FRONT_END_URL").'/restore-password/'.$user->hash;
+
+        Mail::send('emails.forgot', ["link"=>$link], function ($message) use($user) {
+            $message->to($user->email, $user->name.' '.$user->lastname);
+            $message->subject('Reestablecer Contraseña - Ship2Go');
+            $message->from('no-reply@ship2go.com', 'Ship2Go');
+        });
+
+      }
+
+      
+
+    return response()->json(['status' => 'success', 'result' => $user]);
+    }
+
     private function randomString($length = 16)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
