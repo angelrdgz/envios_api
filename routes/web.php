@@ -15,9 +15,11 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('test-email', 'AuthController@testEmail');
+
 
 $router->group(['prefix' => 'api/'], function () use ($router) {
+
+    $router->get('test-email', 'AuthController@testEmail');
 
     $router->group(['prefix' => 'auth/'], function () use ($router) {
         $router->post('login', 'AuthController@login');
@@ -25,7 +27,7 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
         $router->get('profile', 'AuthController@getUser');
         $router->get('active-account/{hash}', 'AuthController@activeAccount');
         $router->post('forgot-password', 'AuthController@forgotPassword');
-        $router->get('restore-password/{hash}', 'AuthController@restorePassword');
+        $router->post('restore-password', 'AuthController@restorePassword');
     });
 
     $router->group(['prefix' => 'shipments'], function () use ($router) {

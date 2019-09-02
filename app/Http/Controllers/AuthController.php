@@ -23,13 +23,7 @@ class AuthController extends Controller
 
     public function testEmail()
     {
-        $data = ["user" => ["name" => "Angel", "lastname" => "Garcia"]];
-        Mail::send('emails.welcome', $data, function ($message) {
-            $message->to('abc@gmail.com', 'Tutorials Point');
-            $message->subject('Laravel Basic Testing Mail');
-            $message->from('xyz@gmail.com', 'Virat Gandhi');
-        });
-        echo "Basic Email Sent. Check your inbox.";
+        return view('emails.recharge', ["total"=>5200, "comision"=>120, "balance"=>18000,'user'=>'Angel Garcia','service'=>'Mercado Pago']);
     }
 
     public function login(Request $request)
@@ -162,6 +156,33 @@ class AuthController extends Controller
       
 
     return response()->json(['status' => 'success', 'result' => $user]);
+    }
+
+    public function restorePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'fail', 'errors' => $validator->errors()], 422);
+        }
+
+      $user = User::where('hash', $request->hash)->first();
+
+      if(is_null($user)){
+        return response()->json(['status' => 'fail', 'message' => 'User not found'], 422);
+      }else{
+        $apikey = base64_encode(str_random(40));
+        $user->api_key = $apikey;
+        $user->password = Hash::make($request->password);
+        $user->hash = NULL;
+        $user->save();
+
+        return response()->json(['status' => 'success', 'api_key' => $apikey, 'user' => $user]);
+
+      }
+
     }
 
     private function randomString($length = 16)

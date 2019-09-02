@@ -65,10 +65,22 @@ class RechargeController extends Controller
                 $company = Company::find(Auth::user()->company->id);
                 $company->balance = Auth::user()->company->balance + $request->total;
                 $company->save();
+
+                Mail::send('emails.recharge', ["total"=>$request->total, "comision"=>0, "balance"=>$company->balance,'user'=>$company->user->name.' '.$company->user->lastname,'service'=>'Mercado Pago'], function ($message) use($company) {
+                    $message->to($company->user->email, $company->user->name.' '.$company->user->lastname);
+                    $message->subject('Recarga - Ship2Go');
+                    $message->from('no-reply@ship2go.com', 'Ship2Go');
+                });
             }else{
                 $user = User::find(Auth::user()->id);
                 $user->balance = Auth::user()->balance + $request->total;
                 $user->save();
+
+                Mail::send('emails.recharge', ["total"=>$request->total, "comision"=>0, "balance"=>18000,'user'=>$user->name.' '.$user->lastname,'service'=>'Mercado Pago'], function ($message) use($user) {
+                    $message->to($user->email, $user->name.' '.$user->lastname);
+                    $message->subject('Recarga - Ship2Go');
+                    $message->from('no-reply@ship2go.com', 'Ship2Go');
+                });
             }
 
         }
