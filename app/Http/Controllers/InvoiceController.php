@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Location;
+use App\Invoice;
 use Auth;
 
-class LocationController extends Controller
+class InvoiceController extends Controller
 {
     public function __construct()
     {
@@ -16,6 +16,7 @@ class LocationController extends Controller
 
     public function index(Request $request)
     {
-        $factura = new FacturaController();
+        $invoices = Invoice::where('user_id', Auth::user()->id)->whereRaw('MONTH(created_at) = "'.date('m').'"')->get();
+        return response()->json(['status'=>'success','data'=>$invoices], 200);
     }
 }

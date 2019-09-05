@@ -40,12 +40,9 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
 
     });
 
-    $router->group(['prefix' => 'shipments'], function () use ($router) {
+    $router->group(['prefix' => 'invoices'], function () use ($router) {
 
-        $router->get('/', 'ShipmentController@index');
-        $router->post('/', 'ShipmentController@store');
-        $router->get('/{id}', 'ShipmentController@show');
-        $router->delete('/{id}', 'ShipmentController@destroy');
+        $router->get('/', 'InvoiceController@index');
 
     });
 
@@ -75,11 +72,9 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
 
     $router->group(['prefix' => 'locations'], function () use ($router) {
 
-        $router->get('/{id}', 'LocationController@show');
-        $router->get('/origenes', 'LocationController@getOrigenes');
-        $router->get('/destinations', 'LocationController@getDestinations');
-        //
-
+        $router->get('/origenes', 'PointController@getOrigenes');
+        $router->get('/destinations', 'PointController@getDestinations');
+        $router->get('/{id}', 'PointController@show');
 
     });
 
