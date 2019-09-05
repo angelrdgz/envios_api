@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Shipment;
+use App\User;
+use App\Company;
 use App\Location;
 use Auth;
 
@@ -26,7 +28,7 @@ class ShipmentController extends Controller
      */
     public function index(Request $request)
     {
-        $shipments = Auth::user()->shipments()->with('origen','destination')->get();
+        $shipments = Auth::user()->shipments()->orderBy('created_at', 'DESC')->with('origen','destination')->get();
         return response()->json(['status' => 'success', 'data' => $shipments], 200);
     }
 
@@ -154,7 +156,7 @@ class ShipmentController extends Controller
             $user->save();
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', "rates"=>$rates,'shipment_id'=>$srEnvioShip["data"]["id"]], 200);
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'shipment_id'=>$srEnvioShip["data"]["id"]], 200);
     }
 
     public function show($id)

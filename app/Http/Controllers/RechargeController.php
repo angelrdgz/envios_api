@@ -8,6 +8,7 @@ use App\User;
 use App\Company;
 use Auth;
 use MercadoPago;
+use Illuminate\Support\Facades\Mail;
 
 class RechargeController extends Controller
 {
