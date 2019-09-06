@@ -420,7 +420,7 @@
                         
                             <h3 style="text-align: center;">Bienvenido a SHIP2GO</h3>
 
-<p><b>{{$user->name}} {{$user->lastname}}</b> estamos emocionados de que hayas concluido con tu proceso de registro con nosotros.&nbsp;<br>
+<p><b>{{$user->name}}</b> estamos emocionados de que hayas concluido con tu proceso de registro con nosotros.&nbsp;<br>
 <br>
 Uno de nuestros ejecutivos de ventas te contactara para ayudarte con una introdución de nuestra plataforma y te asesorara con cualquier duda que puedas tener con el uso de nuestra plataforma.<br>
 <br>

@@ -419,7 +419,7 @@
                         
                             <h3 style="text-align: center;"><span style="font-size:18px">Activa tu Cuenta</span></h3>
 
-<p>Hola {{$user->name}} {{$user->lastname}}, solo falta un paso para poder ingresar a tu cuenta en <a href="http://ship2go.com" target="_blank">ship2go.com</a> y disfrutar de todos los beneficios que nuestra plataforma te ofrece.</p>
+<p>Hola {{$user->name}}, solo falta un paso para poder ingresar a tu cuenta en <a href="http://ship2go.com" target="_blank">ship2go.com</a> y disfrutar de todos los beneficios que nuestra plataforma te ofrece.</p>
 
 <p>Solo debes de dar click en el siguiente botón para poder activar tu cuenta y entrar a tu perfil</p>
 

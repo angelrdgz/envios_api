@@ -59,10 +59,8 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'lastname' => 'required',
             'email' => 'required|unique:users',
             'password' => 'required',
-            'type_id' => 'required',
             'business' => 'required',
             'phone' => 'required',
         ]);
@@ -73,7 +71,6 @@ class AuthController extends Controller
 
         $user = new User();
         $user->name = $request->input('name');
-        $user->lastname = $request->input('lastname');
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));
         $user->type_id = $request->input('type_id');
@@ -85,7 +82,7 @@ class AuthController extends Controller
         $link = env("APP_URL").'/api/auth/active-account/'.$user->hash;
 
         Mail::send('emails.active', ["user"=>$user,"link"=>$link], function ($message) use($user) {
-            $message->to($user->email, $user->name.' '.$user->lastname);
+            $message->to($user->email, $user->name);
             $message->subject('Activa tu cuenta - Ship2Go');
             $message->from('no-reply@ship2go.com', 'Ship2Go');
         });
@@ -106,7 +103,7 @@ class AuthController extends Controller
             $user->save();
 
             Mail::send('emails.welcome', ["user"=>$user], function ($message) use($user) {
-                $message->to($user->email, $user->name.' '.$user->lastname);
+                $message->to($user->email, $user->name);
                 $message->subject('Bienvenido a Ship2Go - Ship2Go');
                 $message->from('no-reply@ship2go.com', 'Ship2Go');
             });
@@ -145,7 +142,7 @@ class AuthController extends Controller
         $link = env("FRONT_END_URL").'/restore-password/'.$user->hash;
 
         Mail::send('emails.forgot', ["link"=>$link], function ($message) use($user) {
-            $message->to($user->email, $user->name.' '.$user->lastname);
+            $message->to($user->email, $user->name);
             $message->subject('Reestablecer Contraseña - Ship2Go');
             $message->from('no-reply@ship2go.com', 'Ship2Go');
         });
