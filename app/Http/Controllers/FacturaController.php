@@ -13,9 +13,11 @@ class FacturaController extends Controller
      * @return void
      */
     public function __construct()
-    { }
+    {
+        
+    }
 
-    public function getInvoices($data)
+    public function getInvoices()
     {
         $ch = curl_init();
 

@@ -18,7 +18,7 @@ class ShipmentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth:api');
     }
 
     /**
@@ -28,7 +28,7 @@ class ShipmentController extends Controller
      */
     public function index(Request $request)
     {
-        $shipments = Auth::user()->shipments()->orderBy('created_at', 'DESC')->with('origen','destination')->get();
+        $shipments = $request->user()->shipments()->orderBy('created_at', 'DESC')->with('origen','destination')->get();
         return response()->json(['status' => 'success', 'data' => $shipments], 200);
     }
 
@@ -162,7 +162,10 @@ class ShipmentController extends Controller
     public function show($id)
     {
         $shipment = Shipment::find($id);
-        return response()->json(['status' => 'success', 'data' => $shipment], 200);
+        $srEnvio = new SrEnvioController();
+        $srEnvioShip = $srEnvio->getShipment($shipment->api_id);
+        //$tracking = $srEnvio->getShipment($shipment->api_id);
+        return response()->json(['status' => 'success', 'data' => ['shipment'=>$shipment,'srEnvioShipment'=>$srEnvioShip["data"]]], 200);
     }
 
     public function destroy(Request $request, $id)

@@ -2,15 +2,14 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable;
-use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Authenticatable
 {
-    use Authenticatable, Authorizable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +27,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'password',
-        'api_key'
+        'email_verified_at',
+        'type_id',
+        'hash',
+        'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     public function shipments()

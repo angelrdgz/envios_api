@@ -134,4 +134,14 @@ class SrEnvioController extends Controller
         return json_decode($result, true);
 
     }
+
+    public function getShipment($id){
+        $ch = curl_init();
+        // set url
+        curl_setopt($ch, CURLOPT_URL, env('SRENVIO_ENDPOINT').'/shipments/'.$id);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($result, true);
+    }
 }

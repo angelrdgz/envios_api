@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class AuthController extends Controller
 {
@@ -27,67 +27,36 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'email' => 'required',
-                'password' => 'required'
-            ],
-            [
-                'email.required' => 'Su email es requerido',
-                'password.required' => 'Su contraseña es requerida',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['status' => 'fail', 'errors' => $validator->errors()], 422);
-        }
-        $user = User::where('email', $request->input('email'))->first();
-        if (is_null($user)) {
-            return response()->json(['status' => 'fail', 'errors' => ["credentials" => "Email o contraseña incorrectos"]], 422);
-        } else {
-            if (Hash::check($request->input('password'), $user->password)) {
-                $apikey = base64_encode(str_random(40));
-                User::where('email', $request->input('email'))->update(['api_key' => "$apikey"]);;
-                return response()->json(['status' => 'success', 'api_key' => $apikey, 'user' => $user]);
-            } else {
-                return response()->json(['status' => 'fail', 'errors' => ["credentials" => "Email o contraseña incorrectos"]], 422);
-            }
+        if(Auth::attempt(["email" => $request->email, "password" => $request->password])){ 
+            $user = Auth::user();
+            $success["token"] = $user->createToken("myApp")->accessToken;
+            $success["user"] = $user;
+            return response()->json(["success" => $success], 200); 
+        } else{ 
+            return response()->json(["error"=>"Unauthorised"], 401);
         }
     }
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|unique:users',
-            'password' => 'required',
-            'business' => 'required',
-            'phone' => 'required',
-        ]);
+        $validator = Validator::make($request->all(), [ 
+            "name" => "required", 
+            "email" => "required|email", 
+            "password" => "required", 
+            "confirm_password" => "required|same:password",
+        ]); 
 
-        if ($validator->fails()) {
-            return response()->json(['status' => 'fail', 'errors' => $validator->errors()], 422);
-        }
+        if ($validator->fails()) { 
+            return response()->json(["error"=>$validator->errors()], 401); 
+        } 
 
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->type_id = $request->input('type_id');
-        $user->phone = $request->input('phone');
-        $user->hash = $this->randomString(16);
-        //$user->mp_token = RechargeController::createCustomer($request->input('email'));
-        $user->save();
+        $input = $request->all(); 
+        $input["password"] = Hash::make($input["password"]);
+        $user = User::create($input); 
 
-        $link = env("APP_URL").'/api/auth/active-account/'.$user->hash;
-
-        Mail::send('emails.active', ["user"=>$user,"link"=>$link], function ($message) use($user) {
-            $message->to($user->email, $user->name);
-            $message->subject('Activa tu cuenta - Ship2Go');
-            $message->from('no-reply@ship2go.com', 'Ship2Go');
-        });
-
-        return response()->json(['status' => 'success', 'result' => $user]);
+        $success["token"] = $user->createToken("myApp")->accessToken;
+        $success["name"] = $user->name;
+        return response()->json(["success"=>$success], 200); 
     }
 
     public function activeAccount($hash)
