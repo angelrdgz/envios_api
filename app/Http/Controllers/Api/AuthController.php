@@ -114,6 +114,67 @@ class AuthController extends Controller
        
     }
 
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['status' => 'fail', 'errors' => $validator->errors()], 422);
+        }
+
+      $user = User::where('email', $request->email)->first();
+
+      if(is_null($user)){
+        return response(['status' => 'fail', 'message' => 'User not found'], 422);
+      }else{
+        $user->hash = $this->randomString(16);
+        $user->save();
+
+
+        $link = env("FRONT_END_URL").'/restore-password/'.$user->hash;
+
+        Mail::send('emails.forgot', ["link"=>$link], function ($message) use($user) {
+            $message->to($user->email, $user->name);
+            $message->subject('Reestablecer Contraseña - Ship2Go');
+            $message->from('no-reply@ship2go.com', 'Ship2Go');
+        });
+
+      }
+
+      
+
+    return response(['status' => 'success', 'result' => $user]);
+    }
+
+    public function restorePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['status' => 'fail', 'errors' => $validator->errors()], 422);
+        }
+
+      $user = User::where('hash', $request->hash)->first();
+
+      if(is_null($user)){
+        return response(['status' => 'fail', 'message' => 'User not found'], 422);
+      }else{
+        $apikey = base64_encode(str_random(40));
+        $user->api_key = $apikey;
+        $user->password = Hash::make($request->password);
+        $user->hash = NULL;
+        $user->save();
+
+        return response(['status' => 'success', 'api_key' => $apikey, 'user' => $user]);
+
+      }
+
+    }
+
     public function logout (Request $request) {
 
         $token = $request->user()->token();
