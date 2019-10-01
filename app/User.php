@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Location', 'user_id')->where('type_id', 2);
     }
+
+    public function businessInfo()
+    {
+        return $this->hasOne('App\UserInformation', 'user_id', 'id');
+    }
 }

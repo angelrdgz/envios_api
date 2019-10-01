@@ -11,7 +11,8 @@ class CountryController extends Controller
 
     public function index()
     {
-        $countries = Country::orderBy('name', 'ASC')->get();
-        return response()->json(['status' => 'success', 'data' => $countries], 200);
+        $newEnvia = new EnviaController();
+        $countries = $newEnvia->countries();
+        return response()->json(['status' => 'success', 'data' => $countries["data"]], 200);
     }
 }

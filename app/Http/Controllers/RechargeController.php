@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Payment;
+use App\Invoice;
 use App\User;
 use App\Company;
 use Auth;
@@ -25,6 +26,26 @@ class RechargeController extends Controller
     public function index(Request $request){
         $recharges = Auth::user()->payments;
         return response()->json(["data"=>$recharges]);
+    }
+
+    public function creatInvoice(Request $request, $id){
+        $recharge = Payment::find($id);
+        $factura = new FacturaController();
+        $invoice = $factura->createInvoice($recharge, $request->user());
+        if($invoice["response"] == 'success'){
+            $recharge->status = 'invoiced';
+            $recharge->save();
+
+            $newInvoice = new Invoice();
+            $newInvoice->user_id = $request->user()->id;
+            $newInvoice->payment_id = $id;
+            $newInvoice->uid = $invoice["uid"];
+            $newInvoice->status = 'created';
+            $newInvoice->save();
+            return response()->json(['status'=>'success', 'data'=>$invoice],200);
+        }else{
+            return response()->json(['status'=>'fail', 'data'=>$invoice], 420);
+        }        
     }
 
     public static function createCustomer($email)

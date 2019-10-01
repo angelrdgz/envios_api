@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Company;
+use App\Http\Controllers\FacturaController;
+use App\UserInformation;
 use Hash;
 use Mail;
 use Illuminate\Support\Facades\Validator;
@@ -163,13 +165,13 @@ class AuthController extends Controller
       if(is_null($user)){
         return response(['status' => 'fail', 'message' => 'User not found'], 422);
       }else{
-        $apikey = base64_encode(str_random(40));
-        $user->api_key = $apikey;
         $user->password = Hash::make($request->password);
         $user->hash = NULL;
         $user->save();
 
-        return response(['status' => 'success', 'api_key' => $apikey, 'user' => $user]);
+        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+
+        return response(['status' => 'success', 'api_key' => $token, 'user' => $user]);
 
       }
 
@@ -183,6 +185,23 @@ class AuthController extends Controller
         $response = 'You have been succesfully logged out!';
         return response($response, 200);
     
+    }
+
+    public function getBusinessInfo(Request $request)
+    {
+        $info = UserInformation::where('user_id', $request->user()->id)->first();
+        return response()->json(['status'=>'success','data'=>$info]);
+    }
+
+    public function businessInfo(Request $request){
+        $info = UserInformation::where('user_id', $request->user()->id)->first();
+        $factura = new FacturaController();
+        if($info){
+            
+        }else{
+            $client = $factura->newCliente($request->all());
+        }
+        return response()->json($client);
     }
 
     private function randomString($length = 16)

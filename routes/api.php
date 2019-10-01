@@ -29,6 +29,8 @@ Route::group(['middleware' => ['json.response']], function () {
 
         // private routes
         Route::middleware('auth:api')->group(function () {
+            Route::get('/business-info', 'Api\AuthController@getBusinessInfo');
+            Route::post('/business-info', 'Api\AuthController@businessInfo');
             Route::get('/profile', 'Api\AuthController@getUser');
             Route::get('/logout', 'Api\AuthController@logout')->name('logout');
         });
@@ -59,10 +61,24 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::prefix('recharges')->group(function () {
         Route::get('/', 'RechargeController@index');
         Route::post('/', 'RechargeController@makePayment');
+        Route::post('/{id}/invoice', 'RechargeController@creatInvoice');
     });
+
+    Route::prefix('countries')->group(function () {
+        Route::get('/', 'CountryController@index');
+    });
+
+    Route::prefix('carriers')->group(function () {
+        Route::get('/', 'CarrierController@index');
+    });
+
+    Route::post('rate', 'RateController@store');
 
     Route::prefix('invoices')->group(function () {
         Route::get('/', 'InvoiceController@index');
+        Route::post('/', 'InvoiceController@store');
+        Route::get('/{id}', 'InvoiceController@show');
+        Route::delete('/{id}', 'InvoiceController@destroy');
     });
 
     
