@@ -42,7 +42,6 @@ class EnviaController extends Controller
         ));
 
         $response = curl_exec($curl);
-        dd($response);
         $err = curl_error($curl);
         curl_close($curl);
 
@@ -53,12 +52,38 @@ class EnviaController extends Controller
         }
     }
 
-    public function carriers()
+    public function states($code)
     {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://queries.envia.com/carrier?country_code=MX",
+            CURLOPT_URL => env('ENVIA_QUERY_ENDPOINT') . "/state?country_code=".$code,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
+    public function carriers($code)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('ENVIA_QUERY_ENDPOINT') ."/carrier?country_code=".$code,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -74,9 +99,9 @@ class EnviaController extends Controller
         curl_close($curl);
 
         if ($err) {
-            echo "cURL Error #:" . $err;
+            return "cURL Error #:" . $err;
         } else {
-            echo $response;
+            return json_decode($response, true);
         }
     }
 }

@@ -68,6 +68,14 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::get('/', 'CountryController@index');
     });
 
+    Route::prefix('states')->group(function () {
+        Route::get('/', 'StateController@index');
+    });
+
+    Route::prefix('ezcmd')->group(function () {
+        Route::post('/get-locations', 'EZCMDController@getLocations');
+    });
+
     Route::prefix('carriers')->group(function () {
         Route::get('/', 'CarrierController@index');
     });

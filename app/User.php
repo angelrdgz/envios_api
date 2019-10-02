@@ -35,6 +35,11 @@ class User extends Authenticatable
         'updated_at',
     ];
 
+    public function company()
+    {
+        return $this->hasOne('App\Company', 'owner_id');
+    }
+
     public function shipments()
     {
         return $this->hasMany('App\Shipment', 'user_id');
