@@ -59,15 +59,14 @@ class ShipmentController extends Controller
     {
         $this->validate($request, [
             'shipment' => 'required',
-            'extraInfo' => 'required',
-            'label'=>'required'
         ]);
 
         $shipInfo = $request->input('shipment');
-        $extraInfo = $request->input('extraInfo');
-        $labelInfo = $request->input('label');
+        $price = 100;
+        //$extraInfo = $request->input('extraInfo');
+        //$labelInfo = $request->input('label');
 
-        if(!is_null(Auth::user()->company_id)){
+        /*if(!is_null(Auth::user()->company_id)){
             if( Auth::user()->company->balance < $labelInfo["price"]){
                 return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
             }
@@ -75,10 +74,10 @@ class ShipmentController extends Controller
             if( Auth::user()->balance < $labelInfo["price"]){
                 return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
             }
-        }
+        }*/
 
         
-        if (!is_null($extraInfo["origen"]["id"])) {
+        /*if (!is_null($extraInfo["origen"]["id"])) {
             $origin = Location::find($extraInfo["origen"]["id"]);
         } else {
             $origin = new Location();
@@ -129,21 +128,22 @@ class ShipmentController extends Controller
         $labelInfo["rate_id"] = intval($labelInfo["rate_id"]);
         unset($labelInfo["shipment_id"]);
         unset($labelInfo["price"]);
-        unset($labelInfo["carrier"]);
+        unset($labelInfo["carrier"]);*/
 
-        $srEnvioShip = $srEnvio->labelTest($labelInfo);
+        //$srEnvioShip = $srEnvio->labelTest($labelInfo);
+        $envia = new EnviaController();
+        $ship = $envia->newShipment($shipInfo);
 
         $shipment = new Shipment();
-        $shipment->api_id = $sid;
+        $shipment->api_id = $ship["data"][0]["trackingNumber"];
         $shipment->user_id = Auth::user()->id;
         $shipment->price = $price;
-        $shipment->carrier = $carrier;
-        $shipment->label_id = $srEnvioShip["data"]["id"];
-        $shipment->label_url = $srEnvioShip["data"]["attributes"]["label_url"];
-        $shipment->tracking_number = $srEnvioShip["data"]["attributes"]["tracking_number"];
-        $shipment->tracking_url = $srEnvioShip["data"]["attributes"]["tracking_url_provider"];
-        $shipment->origin_id = $origin->id;
-        $shipment->destination_id = $destination->id;
+        $shipment->carrier = $ship["data"][0]["carrier"];
+        $shipment->label_url = $ship["data"][0]["label"];
+        $shipment->tracking_number = $ship["data"][0]["trackingNumber"];
+        $shipment->tracking_url = $ship["data"][0]["trackUrl"];
+        $shipment->origin_id = 1;
+        $shipment->destination_id = 2;
         $shipment->save();
 
         if(!is_null(Auth::user()->company_id)){
@@ -156,7 +156,7 @@ class ShipmentController extends Controller
             $user->save();
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'shipment_id'=>$srEnvioShip["data"]["id"]], 200);
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'shipment_id'=>$ship["data"]], 200);
     }
 
     public function show($id)

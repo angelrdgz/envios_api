@@ -10,6 +10,6 @@ class RateController extends Controller
     {
         $envia = new EnviaController();
         $rate = $envia->rate($request->all());
-        return response()->json($rate);
+        return response()->json(["status"=>"success", "data"=>$rate]);
     }
 }

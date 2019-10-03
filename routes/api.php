@@ -72,6 +72,10 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::get('/', 'StateController@index');
     });
 
+    Route::prefix('rates')->group(function () {
+        Route::post('/', 'RateController@store');
+    });
+
     Route::prefix('ezcmd')->group(function () {
         Route::post('/get-locations', 'EZCMDController@getLocations');
     });
@@ -79,8 +83,6 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::prefix('carriers')->group(function () {
         Route::get('/', 'CarrierController@index');
     });
-
-    Route::post('rate', 'RateController@store');
 
     Route::prefix('invoices')->group(function () {
         Route::get('/', 'InvoiceController@index');

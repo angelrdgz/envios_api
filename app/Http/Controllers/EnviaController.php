@@ -26,6 +26,26 @@ class EnviaController extends Controller
         return json_decode($result, true);
     }
 
+    public function newShipment($data){
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, env('ENVIA_API_ENDPOINT') . '/ship/generate/');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . env('ENVIA_TOKEN'),
+            "Content-Type: application/json"
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        return json_decode($result, true);
+
+    }
+
     public function countries()
     {
         $curl = curl_init();
