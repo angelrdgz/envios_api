@@ -16,16 +16,16 @@ class InvoiceController extends Controller
 
     public function index(Request $request)
     {
-        $invoices = Invoice::where('user_id', Auth::user()->id)->whereRaw('MONTH(created_at) = "'.$request->get('month').'"')->get();
+        $invoices = Invoice::where('user_id', $request->user()->id)->whereRaw('MONTH(created_at) = "'.$request->get('month').'"')->get();
         //$factura = new FacturaController();
         //$invoices = $factura->invoices();
         return response()->json(['status'=>'success','data'=>$invoices], 200);
     }
 
     public function store(Request $request){
-        $factura = new FacturaController();
+        /*$factura = new FacturaController();
         $newInvoices = $factura->createInvoice([]);
-        return response()->json($newInvoices);
+        return response()->json($newInvoices);*/
     }
 
     public function show(Request $request, $id){

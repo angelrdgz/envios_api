@@ -62,39 +62,40 @@ class ShipmentController extends Controller
         ]);
 
         $shipInfo = $request->input('shipment');
-        $price = 100;
-        //$extraInfo = $request->input('extraInfo');
+        $price = $request->input('price');
+        $extraInfo = $request->input('extraInfo');
         //$labelInfo = $request->input('label');
 
-        /*if(!is_null(Auth::user()->company_id)){
-            if( Auth::user()->company->balance < $labelInfo["price"]){
+        if(!is_null($request->user()->business == 1)){
+            if( $request->user()->company->balance < $price){
                 return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
             }
         }else{
-            if( Auth::user()->balance < $labelInfo["price"]){
-                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
+            if( $request->user()->balance < $price){
+                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes', 'data'=>$request->user()->balance.' - '.$price], 422);
             }
-        }*/
+        }
 
         
-        /*if (!is_null($extraInfo["origen"]["id"])) {
+        if (!is_null($extraInfo["origen"]["id"])) {
             $origin = Location::find($extraInfo["origen"]["id"]);
         } else {
             $origin = new Location();
             $origin->user_id = Auth::user()->id;
             $origin->type_id = 1;        
         }
-        $origin->name = $shipInfo["address_from"]["name"];
-        $origin->phone = $shipInfo["address_from"]["phone"];
-        $origin->email = $shipInfo["address_from"]["email"];
-        $origin->company = $shipInfo["address_from"]["company"];
-        $origin->address = $shipInfo["address_from"]["address1"];
-        $origin->address2 = $shipInfo["address_from"]["address2"];
-        $origin->city = $shipInfo["address_from"]["city"];
-        $origin->state = $shipInfo["address_from"]["province"];
-        $origin->country = $shipInfo["address_from"]["country"];
-        $origin->zipcode = $shipInfo["address_from"]["zip"];
-        $origin->reference = $shipInfo["address_from"]["reference"];
+        $origin->name = $shipInfo["origin"]["name"];
+        $origin->phone = $shipInfo["origin"]["phone"];
+        $origin->email = $shipInfo["origin"]["email"];
+        $origin->company = $shipInfo["origin"]["company"];
+        $origin->address = $shipInfo["origin"]["street"];
+        $origin->number = $shipInfo["origin"]["number"];
+        $origin->district = $shipInfo["origin"]["district"];
+        $origin->city = $shipInfo["origin"]["city"];
+        $origin->state = $shipInfo["origin"]["state"];
+        $origin->country = $shipInfo["origin"]["country"];
+        $origin->zipcode = $shipInfo["origin"]["postalCode"];
+        $origin->reference = $extraInfo["origen"]["reference"];
         $origin->nickname = $extraInfo["origen"]["nickname"];
         
         $origin->save();
@@ -106,36 +107,25 @@ class ShipmentController extends Controller
             $destination->user_id = Auth::user()->id;
             $destination->type_id = 2;
         }
-        $destination->name = $shipInfo["address_to"]["name"];
-        $destination->phone = $shipInfo["address_to"]["phone"];
-        $destination->email = $shipInfo["address_to"]["email"];
-        $destination->company = $shipInfo["address_to"]["company"];
-        $destination->address = $shipInfo["address_to"]["address1"];
-        $destination->address2 = $shipInfo["address_to"]["address2"];
-        $destination->city = $shipInfo["address_to"]["city"];
-        $destination->state = $shipInfo["address_to"]["province"];
-        $destination->country = $shipInfo["address_to"]["country"];
-        $destination->zipcode = $shipInfo["address_to"]["zip"];
-        $destination->reference = $shipInfo["address_to"]["reference"];
+        $destination->name = $shipInfo["destination"]["name"];
+        $destination->phone = $shipInfo["destination"]["phone"];
+        $destination->email = $shipInfo["destination"]["email"];
+        $destination->company = $shipInfo["destination"]["company"];
+        $destination->address = $shipInfo["destination"]["street"];
+        $destination->number = $shipInfo["destination"]["number"];
+        $destination->district = $shipInfo["destination"]["district"];
+        $destination->city = $shipInfo["destination"]["city"];
+        $destination->state = $shipInfo["destination"]["state"];
+        $destination->country = $shipInfo["destination"]["country"];
+        $destination->zipcode = $shipInfo["destination"]["postalCode"];
+        $destination->reference = $extraInfo["destination"]["reference"];
         $destination->nickname = $extraInfo["destination"]["nickname"];
         $destination->save();
 
-        $srEnvio = new SrEnvioController();
-        $sid = $labelInfo["shipment_id"];
-        $price = $labelInfo["price"];
-        $carrier = $labelInfo["carrier"];
-
-        $labelInfo["rate_id"] = intval($labelInfo["rate_id"]);
-        unset($labelInfo["shipment_id"]);
-        unset($labelInfo["price"]);
-        unset($labelInfo["carrier"]);*/
-
-        //$srEnvioShip = $srEnvio->labelTest($labelInfo);
         $envia = new EnviaController();
         $ship = $envia->newShipment($shipInfo);
 
         $shipment = new Shipment();
-        $shipment->api_id = $ship["data"][0]["trackingNumber"];
         $shipment->user_id = Auth::user()->id;
         $shipment->price = $price;
         $shipment->carrier = $ship["data"][0]["carrier"];
@@ -171,12 +161,10 @@ class ShipmentController extends Controller
     public function destroy(Request $request, $id)
     {
         $shipment = Shipment::find($id);
-
-        $srEnvio = new SrEnvioController();
-        $srEnvioShip = $srEnvio->cancelShipment(["tracking_number"=>$shipment->tracking_number,"reason"=>"Datos de dirección erróneos."]);
-        
+        $envia = new EnviaController();
+        $ship = $envia->cancelShipment(["trackingNumber"=>$shipment->tracking_number,"carrier"=>$shipment->carrier]);
         $shipment->status = 'CANCELLED';
         $shipment->save();
-        return response()->json(['status' => 'success', 'message' => $srEnvioShip], 200);
+        return response()->json(['status' => 'success','data'=>$ship], 200);
     }
 }

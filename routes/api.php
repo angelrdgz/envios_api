@@ -76,6 +76,10 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::post('/', 'RateController@store');
     });
 
+    Route::prefix('tracking')->group(function () {
+        Route::get('/{id}', 'TrackingController@show');
+    });
+
     Route::prefix('ezcmd')->group(function () {
         Route::post('/get-locations', 'EZCMDController@getLocations');
     });
