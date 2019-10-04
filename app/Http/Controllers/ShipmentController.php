@@ -162,7 +162,7 @@ class ShipmentController extends Controller
     {
         $shipment = Shipment::find($id);
         $envia = new EnviaController();
-        $ship = $envia->cancelShipment(["trackingNumber"=>$shipment->tracking_number,"carrier"=>$shipment->carrier]);
+        $ship = $envia->cancelShipment(["trackingNumbers"=>$shipment->tracking_number,"carrier"=>$shipment->carrier]);
         $shipment->status = 'CANCELLED';
         $shipment->save();
         return response()->json(['status' => 'success','data'=>$ship], 200);
