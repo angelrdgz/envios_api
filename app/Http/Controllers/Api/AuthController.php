@@ -36,6 +36,9 @@ class AuthController extends Controller
         if ($user) {
     
             if (Hash::check($request->password, $user->password)) {
+                if(is_null($user->email_verified_at)){
+                    return response(['status' => 'fail', 'data' => [], 'message'=>'Su cuenta no ha sido verificada.'], 500);
+                }
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                 $user->company;
                 return response(['status' => 'success', 'api_key' => $token, 'user' => $user], 200);
@@ -81,6 +84,7 @@ class AuthController extends Controller
           $company->name = $request->input('company');
           $company->owner_id = $user->id;
           $company->balance = 0;
+          $company->shipments = $request->input('shipments');
           $company->save();
         }
 

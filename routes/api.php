@@ -80,6 +80,14 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::get('/{id}', 'TrackingController@show');
     });
 
+    Route::prefix('profile')->group(function () {
+        Route::put('/', 'ProfileController@update');
+    });
+
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', 'DashboardController@index');
+    });
+
     Route::prefix('ezcmd')->group(function () {
         Route::post('/get-locations', 'EZCMDController@getLocations');
     });
