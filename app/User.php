@@ -27,6 +27,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'email_verified_at',
         'type_id',
         'hash',
         'remember_token',
@@ -37,6 +38,11 @@ class User extends Authenticatable
     public function company()
     {
         return $this->hasOne('App\Company', 'owner_id');
+    }
+
+    public function configuration()
+    {
+        return $this->hasOne('App\Configuration', 'user_id');
     }
 
     public function shipments()

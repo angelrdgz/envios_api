@@ -146,7 +146,7 @@ class ShipmentController extends Controller
             $user->save();
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'shipment_id'=>$ship["data"]], 200);
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'data'=>$ship["data"][0]], 200);
     }
 
     public function show($id)

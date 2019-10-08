@@ -26,6 +26,8 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::get('/active-account/{hash}', 'Api\AuthController@activeAccount');
         Route::post('/forgot-password', 'Api\AuthController@forgotPassword');
         Route::post('/restore-password', 'Api\AuthController@restorePassword');
+        Route::post('/resend-email', 'Api\AuthController@resendEmail');
+        Route::post('/contact', 'Api\AuthController@contact');
 
         // private routes
         Route::middleware('auth:api')->group(function () {
@@ -86,6 +88,11 @@ Route::group(['middleware' => ['json.response']], function () {
 
     Route::prefix('dashboard')->group(function () {
         Route::get('/', 'DashboardController@index');
+    });
+
+    Route::prefix('configurations')->group(function () {
+        Route::get('/', 'ConfigurationController@index');
+        Route::put('/', 'ConfigurationController@update');
     });
 
     Route::prefix('ezcmd')->group(function () {
