@@ -32,7 +32,6 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
             'type' => 'required',
             'height' => 'required',
             'width' => 'required',
@@ -64,7 +63,6 @@ class PackageController extends Controller
     public function update($id, Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
             'type' => 'required',
             'height' => 'required',
             'width' => 'required',

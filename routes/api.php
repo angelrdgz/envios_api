@@ -58,6 +58,7 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::get('/origenes', 'PointController@getOrigenes');
         Route::get('/destinations', 'PointController@getDestinations');
         Route::get('/{id}', 'PointController@show');
+        Route::delete('/{id}', 'PointController@destroy');
     });
 
     Route::prefix('recharges')->group(function () {
@@ -108,6 +109,10 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::post('/', 'InvoiceController@store');
         Route::get('/{id}', 'InvoiceController@show');
         Route::delete('/{id}', 'InvoiceController@destroy');
+    });
+
+    Route::prefix('site')->group(function () {
+        Route::post('/rates', 'PublicController@rate');
     });
 
     

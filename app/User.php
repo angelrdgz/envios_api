@@ -67,12 +67,12 @@ class User extends Authenticatable
 
     public function origenes()
     {
-        return $this->hasMany('App\Location', 'user_id')->where('type_id', 1);
+        return $this->hasMany('App\Location', 'user_id')->where('type_id', 1)->where('status', 1);
     }
 
     public function destinations()
     {
-        return $this->hasMany('App\Location', 'user_id')->where('type_id', 2);
+        return $this->hasMany('App\Location', 'user_id')->where('type_id', 2)->where('status', 1);
     }
 
     public function businessInfo()
