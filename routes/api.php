@@ -67,6 +67,10 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::post('/{id}/invoice', 'RechargeController@creatInvoice');
     });
 
+    Route::prefix('logbooks')->group(function(){
+        Route::get('/', 'LogbookController@index');
+    });
+
     Route::prefix('countries')->group(function () {
         Route::get('/', 'CountryController@index');
     });

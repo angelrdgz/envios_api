@@ -68,11 +68,11 @@ class ShipmentController extends Controller
 
         if(!is_null($request->user()->business == 1)){
             if( $request->user()->company->balance < $price){
-                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 422);
+                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 406);
             }
         }else{
             if( $request->user()->balance < $price){
-                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes', 'data'=>$request->user()->balance.' - '.$price], 422);
+                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes', 'data'=>$request->user()->balance.' - '.$price], 406);
             }
         }
 
@@ -81,7 +81,7 @@ class ShipmentController extends Controller
             $origin = Location::find($extraInfo["origen"]["id"]);
         } else {
             $origin = new Location();
-            $origin->user_id = Auth::user()->id;
+            $origin->user_id = $request->user()->id;
             $origin->type_id = 1;        
         }
         $origin->name = $shipInfo["origin"]["name"];
@@ -104,7 +104,7 @@ class ShipmentController extends Controller
             $destination = Location::find($extraInfo["destination"]["id"]);
         } else {
             $destination = new Location();
-            $destination->user_id = Auth::user()->id;
+            $destination->user_id = $request->user()->id;
             $destination->type_id = 2;
         }
         $destination->name = $shipInfo["destination"]["name"];
@@ -126,7 +126,7 @@ class ShipmentController extends Controller
         $ship = $envia->newShipment($shipInfo);
 
         $shipment = new Shipment();
-        $shipment->user_id = Auth::user()->id;
+        $shipment->user_id = $request->user()->id;
         $shipment->price = $price;
         $shipment->carrier = $ship["data"][0]["carrier"];
         $shipment->label_url = $ship["data"][0]["label"];
@@ -136,17 +136,17 @@ class ShipmentController extends Controller
         $shipment->destination_id = 2;
         $shipment->save();
 
-        if(!is_null(Auth::user()->company_id)){
-            $company = Company::find(Auth::user()->company->id);
-            $company->balance = Auth::user()->company->balance - $price;
+        if(!is_null($request->user()->company_id)){
+            $company = Company::find($request->user()->company->id);
+            $company->balance = $request->user()->company->balance - $price;
             $company->save();
         }else{
-            $user = User::find(Auth::user()->id);
-            $user->balance = Auth::user()->balance - $price;
+            $user = User::find($request->user()->id);
+            $user->balance = $request->user()->balance - $price;
             $user->save();
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'data'=>$ship["data"][0]], 200);
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'data'=>$ship], 200);
     }
 
     public function show($id)

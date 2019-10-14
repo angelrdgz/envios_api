@@ -46,11 +46,11 @@ class AuthController extends Controller
                 return response(['status' => 'success', 'api_key' => $token, 'user' => $user], 200);
             } else {
                 $response = "Password missmatch";
-                return response(['status' => 'fail', 'errors' => ["credentials" => "Email o contraseña incorrectos"]], 422);
+                return response(['status' => 'fail', 'errors' => ["credentials" => "Email o contraseña incorrectos"]], 401);
             }
     
         } else {
-            return response(['status' => 'fail', 'errors' => ["credentials" => "Email o contraseña incorrectos"]], 422);
+            return response(['status' => 'fail', 'errors' => ["credentials" => "Email o contraseña incorrectos"]], 401);
         }
     
     }
@@ -127,11 +127,16 @@ class AuthController extends Controller
         }
 
         $link = env("FRONT_END_URL").'/active-account/'.$user->hash;
-        Mail::send('emails.active', ["user"=>$user,"link"=>$link], function ($message) use($user) {
-            $message->to($user->email, $user->name);
-            $message->subject('Activa tu cuenta - Ship2Go');
-            $message->from('no-reply@ship2go.com', 'Ship2Go');
-        });
+        try {
+            Mail::send('emails.active', ["user"=>$user,"link"=>$link], function ($message) use($user) {
+                $message->to($user->email, $user->name);
+                $message->subject('Activa tu cuenta - Ship2Go');
+                $message->from('no-reply@ship2go.com', 'Ship2Go');
+            });
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        
         return response(['status' => 'success', 'result' => $user]);
     
     }
@@ -161,6 +166,8 @@ class AuthController extends Controller
             $user->email_verified_at = date('Y-m-d H:i:s');
             $user->hash = NULL;
             $user->save();
+
+            $user->company;
 
             $token = $user->createToken('Laravel Password Grant Client')->accessToken;
 
@@ -254,14 +261,64 @@ class AuthController extends Controller
 
     public function businessInfo(Request $request)
     {
-        $info = UserInformation::where('user_id', $request->user()->id)->first();
-        $factura = new FacturaController();
-        if($info){
-            
-        }else{
-            $client = $factura->newCliente($request->all());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'lastname' => 'required',
+            'phone' => 'required',
+            'email' => 'required|string|email|max:255',
+            'business_name' => 'required',
+            'rfc' => 'required',
+            'address' => 'required',
+            'num_ext' => 'required',
+            'zip_code' => 'required',
+            'neight' => 'required',
+            'state' => 'required',
+            'city' => 'required'
+        ],
+        [
+            'name.required' => 'El nombre es requerido',
+            'lastname.required' => 'El apellido es requerido',
+            'email.required' => 'El email es requerido',
+            'email.email' => 'Debe ingresar un email valido',
+            'business_name' => 'La razón social es requerida',
+            'rfc.required' => 'El RFC es requerido',
+            'address.required' => 'La dirección es requerida',
+            'num_ext.required' => 'El número externo es requerido',
+            'zip_code.required' => 'El código postal es requerido',
+            'neight.required' => 'La colonia es requerida',
+            'state.required' => 'El estado es requerido',
+            'city.required' => 'La ciudad es requerida',           
+            'phone.required' => 'El teléfono es requerido',
+        ]);
+    
+        if ($validator->fails())
+        {
+            return response(['errors'=>$validator->errors()], 422);
         }
-        return response()->json($client);
+
+        $info = UserInformation::where('user_id', $request->user()->id)->first();
+        
+        if(!$info){
+            $factura = new FacturaController();
+            $client = $factura->newCliente($request->all());
+            User::where('id', $request->user()->id)->update(['uid_factura'=>$client['Data']['UID']]);
+        }
+
+        $info->name = $request->input('name');
+        $info->lastname = $request->input('lastname');
+        $info->email = $request->input('email');
+        $info->phone = $request->input('phone');
+        $info->business_name = $request->input('business_name');
+        $info->rfc = $request->input('rfc');
+        $info->address = $request->input('address');
+        $info->num_ext = $request->input('num_ext');
+        $info->zip_code = $request->input('zip_code');
+        $info->neight = $request->input('neight');
+        $info->state = $request->input('state');
+        $info->city = $request->input('city');
+        $info->delegation = $request->input('delegation');
+        $info->save();
+        return response()->json($info);
     }
 
     public function contact(Request $request)

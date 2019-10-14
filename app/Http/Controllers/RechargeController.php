@@ -7,6 +7,7 @@ use App\Payment;
 use App\Invoice;
 use App\User;
 use App\Company;
+use App\Logbook;
 use Auth;
 use MercadoPago;
 use Illuminate\Support\Facades\Mail;
@@ -24,7 +25,7 @@ class RechargeController extends Controller
     }
 
     public function index(Request $request){
-        $recharges = Auth::user()->payments;
+        $recharges = $request->user()->payments;
         return response()->json(["data"=>$recharges]);
     }
 
@@ -61,7 +62,7 @@ class RechargeController extends Controller
     {
         MercadoPago\SDK::setAccessToken(env("MP_TOKEN_SANDBOX"));
         $payment = new MercadoPago\Payment();
-        $payment->transaction_amount = 140;
+        $payment->transaction_amount = $request->total;
         $payment->token = $request->token;
         $payment->description = "Deposito a Ship2go";
         $payment->installments = 1;
@@ -75,37 +76,54 @@ class RechargeController extends Controller
 
             $pay = new Payment();
             $pay->mp_id = $payment->id;
-            $pay->user_id = Auth::user()->id;
+            $pay->user_id = $request->user()->id;
             $pay->payment_method = $payment->payment_method_id;
             $pay->status = $payment->status;
             $pay->total = $request->total;
             $pay->card = substr($request->cardNumber, 11, 4);
             $pay->save();
 
-            if(!is_null(Auth::user()->company_id)){
-                $company = Company::find(Auth::user()->company->id);
-                $company->balance = Auth::user()->company->balance + $request->total;
+            $logbook = new Logbook();
+            $logbook->user_id = $request->user()->id;
+            $logbook->type = 'recarga';
+            $logbook->total = $request->total;
+            $logbook->save();
+
+
+
+            if($request->user()->business == 1){
+                $company = Company::find($request->user()->company->id);
+                $company->balance = $request->user()->company->balance + $request->total;
                 $company->save();
 
-                Mail::send('emails.recharge', ["total"=>$request->total, "comision"=>0, "balance"=>$company->balance,'user'=>$company->user->name,'service'=>'Mercado Pago'], function ($message) use($company) {
-                    $message->to($company->user->email, $company->user->name);
-                    $message->subject('Recarga - Ship2Go');
-                    $message->from('no-reply@ship2go.com', 'Ship2Go');
-                });
+                try {
+                    Mail::send('emails.recharge', ["total"=>$request->total, "comision"=>0, "balance"=>$company->balance,'user'=>$company->user->name,'service'=>'Mercado Pago'], function ($message) use($company) {
+                        $message->to($company->user->email, $company->user->name);
+                        $message->subject('Recarga - Ship2Go');
+                        $message->from('no-reply@ship2go.com', 'Ship2Go');
+                    });
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+                
             }else{
-                $user = User::find(Auth::user()->id);
-                $user->balance = Auth::user()->balance + $request->total;
+                $user = User::find($request->user()->id);
+                $user->balance = $request->user()->balance + $request->total;
                 $user->save();
 
-                Mail::send('emails.recharge', ["total"=>$request->total, "comision"=>0, "balance"=>18000,'user'=>$user->name,'service'=>'Mercado Pago'], function ($message) use($user) {
-                    $message->to($user->email, $user->name);
-                    $message->subject('Recarga - Ship2Go');
-                    $message->from('no-reply@ship2go.com', 'Ship2Go');
-                });
+                try {
+                    Mail::send('emails.recharge', ["total"=>$request->total, "comision"=>0, "balance"=>18000,'user'=>$user->name,'service'=>'Mercado Pago'], function ($message) use($user) {
+                        $message->to($user->email, $user->name);
+                        $message->subject('Recarga - Ship2Go');
+                        $message->from('no-reply@ship2go.com', 'Ship2Go');
+                    });
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
             }
 
         }
-        return response()->json(['status'=>'success', 'message'=>'Payment created successfully'], 200);
+        return response()->json(['status'=>'success', 'message'=>'Payment created successfully','data'=>$request->user()->business == 1 ? $company->balance:$user->balance], 200);
     }
 
     private function getCustomer($token)

@@ -23,6 +23,7 @@ class CreateShipmentsTable extends Migration
                 $table->integer('origin_id')->nullable();
                 $table->integer('destination_id')->nullable();
                 $table->decimal('price', 8,2);
+                $table->boolean('picked')->default(false);
                 $table->timestamps();
                 $table->softDeletes();
             });
