@@ -43,6 +43,12 @@ class AuthController extends Controller
                 }
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                 $user->company;
+
+                if(!is_null($user->company)){
+                    if($user->company->status == 0){
+                        return response(['status' => 'fail', 'errors' => ["credentials" => "Su compañia ha sido desactivada"]], 401);
+                    }
+                }
                 return response(['status' => 'success', 'api_key' => $token, 'user' => $user], 200);
             } else {
                 $response = "Password missmatch";

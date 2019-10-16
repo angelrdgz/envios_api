@@ -115,9 +115,20 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::delete('/{id}', 'InvoiceController@destroy');
     });
 
+    Route::prefix('companies')->group(function () {
+        Route::get('/', 'CompanyController@index');
+        Route::get('/{id}', 'CompanyController@show');
+        Route::put('/{id}', 'CompanyController@update');
+    });
+
+    Route::get('/active-company/{id}', 'CompanyController@active');
+    Route::get('/unactive-company/{id}', 'CompanyController@unactive');
+
     Route::prefix('site')->group(function () {
         Route::post('/rates', 'PublicController@rate');
     });
+
+    Route::post('search-labels', 'ShipmentController@search');
 
     
 

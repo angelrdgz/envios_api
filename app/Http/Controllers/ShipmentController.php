@@ -167,4 +167,27 @@ class ShipmentController extends Controller
         $shipment->save();
         return response()->json(['status' => 'success','data'=>$ship], 200);
     }
+
+    public function search(Request $request)
+    {
+        if(!is_null($request->input('trackingNumber')) && is_null($request->input('company'))){
+            $shipments = Shipment::where('tracking_number', 'like', '%'.$request->input('trackingNumber').'%')->with('origen','destination')->get();
+        }elseif(is_null($request->input('trackingNumber')) && !is_null($request->input('company'))){
+            $company = User::where('email', 'like', '%'.$request->input('company').'%')->first();
+            if(count($company) > 0){
+                $shipments = Shipment::where('user_id', $company->id)->with('origen','destination')->get();
+            }else{
+                $shipments = [];
+            }            
+        }elseif(!is_null($request->input('trackingNumber')) && !is_null($request->input('company'))){
+            $company = User::where('email', 'like', '%'.$request->input('company').'%')->first();
+            if(count($company) > 0){
+                $shipments = Shipment::where('tracking_number', 'like', '%'.$request->input('trackingNumber').'%')->where('user_id', $company->id)->with('origen','destination')->get();
+            }else{
+                $shipments = Shipment::where('tracking_number', 'like', '%'.$request->input('trackingNumber').'%')->with('origen','destination')->get();
+            }
+        }
+
+        return response()->json(['status'=>'success', 'data'=>$shipments]);
+    }
 }
