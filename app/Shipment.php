@@ -5,6 +5,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shipment extends Model
 {
+    protected $casts = [
+        'picked' => 'boolean',
+    ];
+
     use SoftDeletes;  
     
     public function origen()

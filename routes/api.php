@@ -129,6 +129,8 @@ Route::group(['middleware' => ['json.response']], function () {
     });
 
     Route::post('search-labels', 'ShipmentController@search');
+    Route::post('pick-shipment', 'ShipmentController@pick');
+    Route::post('refund-shipment', 'ShipmentController@payback');
 
     
 

@@ -92,7 +92,7 @@ class RechargeController extends Controller
 
 
             if($request->user()->business == 1){
-                $company = Company::find($request->user()->company->id);
+                $company = Company::where('owner_id', $request->user()->id)->first();
                 $company->balance = $request->user()->company->balance + $request->total;
                 $company->save();
 

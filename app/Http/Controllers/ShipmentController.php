@@ -7,6 +7,7 @@ use App\Shipment;
 use App\User;
 use App\Company;
 use App\Location;
+use App\Logbook;
 use Auth;
 
 class ShipmentController extends Controller
@@ -28,12 +29,12 @@ class ShipmentController extends Controller
      */
     public function index(Request $request)
     {
-        $shipments = $request->user()->shipments()->orderBy('created_at', 'DESC')->with('origen','destination')->get();
+        $shipments = $request->user()->shipments()->orderBy('created_at', 'DESC')->with('origen', 'destination')->get();
         return response()->json(['status' => 'success', 'data' => $shipments], 200);
     }
 
     public function store(Request $request)
-    {        
+    {
         $this->validate($request, [
             'shipment' => 'required',
         ]);
@@ -47,12 +48,12 @@ class ShipmentController extends Controller
         $rates = [];
 
         foreach ($srEnvioShip["included"] as $key => $item) {
-            if($item["type"] == "rates"){
+            if ($item["type"] == "rates") {
                 array_push($rates, $item);
             }
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', "rates"=>$rates,'shipment_id'=>$srEnvioShip["data"]["id"]], 200);
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', "rates" => $rates, 'shipment_id' => $srEnvioShip["data"]["id"]], 200);
     }
 
     public function createLabel(Request $request)
@@ -66,23 +67,23 @@ class ShipmentController extends Controller
         $extraInfo = $request->input('extraInfo');
         //$labelInfo = $request->input('label');
 
-        if(!is_null($request->user()->business == 1)){
-            if( $request->user()->company->balance < $price){
+        if (!is_null($request->user()->business == 1)) {
+            if ($request->user()->company->balance < $price) {
                 return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes'], 406);
             }
-        }else{
-            if( $request->user()->balance < $price){
-                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes', 'data'=>$request->user()->balance.' - '.$price], 406);
+        } else {
+            if ($request->user()->balance < $price) {
+                return response()->json(['status' => 'fail', 'error' => 'Fondos insuficientes', 'data' => $request->user()->balance . ' - ' . $price], 406);
             }
         }
 
-        
+
         if (!is_null($extraInfo["origen"]["id"])) {
             $origin = Location::find($extraInfo["origen"]["id"]);
         } else {
             $origin = new Location();
             $origin->user_id = $request->user()->id;
-            $origin->type_id = 1;        
+            $origin->type_id = 1;
         }
         $origin->name = $shipInfo["origin"]["name"];
         $origin->phone = $shipInfo["origin"]["phone"];
@@ -97,7 +98,7 @@ class ShipmentController extends Controller
         $origin->zipcode = $shipInfo["origin"]["postalCode"];
         $origin->reference = $extraInfo["origen"]["reference"];
         $origin->nickname = $extraInfo["origen"]["nickname"];
-        
+
         $origin->save();
 
         if (!is_null($extraInfo["destination"]["id"])) {
@@ -136,17 +137,17 @@ class ShipmentController extends Controller
         $shipment->destination_id = 2;
         $shipment->save();
 
-        if(!is_null($request->user()->company_id)){
-            $company = Company::find($request->user()->company->id);
+        if ($request->user()->business == 1) {
+            $company = Company::where('owner_id', $request->user()->id)->first();
             $company->balance = $request->user()->company->balance - $price;
             $company->save();
-        }else{
+        } else {
             $user = User::find($request->user()->id);
             $user->balance = $request->user()->balance - $price;
             $user->save();
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'data'=>$ship], 200);
+        return response()->json(['status' => 'success', 'message' => 'Shipment created successfully', 'data' => $ship], 200);
     }
 
     public function show($id)
@@ -155,39 +156,80 @@ class ShipmentController extends Controller
         $srEnvio = new SrEnvioController();
         $srEnvioShip = $srEnvio->getShipment($shipment->api_id);
         //$tracking = $srEnvio->getShipment($shipment->api_id);
-        return response()->json(['status' => 'success', 'data' => ['shipment'=>$shipment,'srEnvioShipment'=>$srEnvioShip["data"]]], 200);
+        return response()->json(['status' => 'success', 'data' => ['shipment' => $shipment, 'srEnvioShipment' => $srEnvioShip["data"]]], 200);
     }
 
     public function destroy(Request $request, $id)
     {
         $shipment = Shipment::find($id);
         $envia = new EnviaController();
-        $ship = $envia->cancelShipment(["trackingNumbers"=>$shipment->tracking_number,"carrier"=>$shipment->carrier]);
+        $ship = $envia->cancelShipment(["trackingNumbers" => $shipment->tracking_number, "carrier" => $shipment->carrier]);
         $shipment->status = 'CANCELLED';
         $shipment->save();
-        return response()->json(['status' => 'success','data'=>$ship], 200);
+        return response()->json(['status' => 'success', 'data' => $shipment], 200);
+    }
+
+    public function payback(Request $request)
+    {
+        $shipment = Shipment::find($request->id);
+        $shipment->status = 'REFUNDED';
+        $shipment->save();
+
+        $user = User::find($shipment->user_id);
+
+        if($user->business == 1){
+            $company = Company::where('owner_id', $user->id)->first();
+            $company->balance = $company->balance + $shipment->price;
+            $company->save();
+            
+        }else{
+            $user->balance = $user->balance + $shipment->price;
+            $user->save();
+        }
+
+        $logbook = new Logbook();
+        $logbook->user_id = $request->user()->id;
+        $logbook->type = 'reembolso';
+        $logbook->total = $shipment->price;
+        $logbook->save();
+
+        $shipment->origen;
+        $shipment->destination;
+
+        return response()->json(['status' => 'success', 'data' => $shipment], 200);
     }
 
     public function search(Request $request)
     {
-        if(!is_null($request->input('trackingNumber')) && is_null($request->input('company'))){
-            $shipments = Shipment::where('tracking_number', 'like', '%'.$request->input('trackingNumber').'%')->with('origen','destination')->get();
-        }elseif(is_null($request->input('trackingNumber')) && !is_null($request->input('company'))){
-            $company = User::where('email', 'like', '%'.$request->input('company').'%')->first();
-            if(count($company) > 0){
-                $shipments = Shipment::where('user_id', $company->id)->with('origen','destination')->get();
-            }else{
+        if (!is_null($request->input('trackingNumber')) && is_null($request->input('company'))) {
+            $shipments = Shipment::where('tracking_number', 'like', '%' . $request->input('trackingNumber') . '%')->with('origen', 'destination')->get();
+        } elseif (is_null($request->input('trackingNumber')) && !is_null($request->input('company'))) {
+            $company = User::where('email', $request->input('company'))->first();
+            if (count($company) > 0) {
+                $shipments = Shipment::where('user_id', $company->id)->with('origen', 'destination')->get();
+            } else {
                 $shipments = [];
-            }            
-        }elseif(!is_null($request->input('trackingNumber')) && !is_null($request->input('company'))){
-            $company = User::where('email', 'like', '%'.$request->input('company').'%')->first();
-            if(count($company) > 0){
-                $shipments = Shipment::where('tracking_number', 'like', '%'.$request->input('trackingNumber').'%')->where('user_id', $company->id)->with('origen','destination')->get();
-            }else{
-                $shipments = Shipment::where('tracking_number', 'like', '%'.$request->input('trackingNumber').'%')->with('origen','destination')->get();
+            }
+        } elseif (!is_null($request->input('trackingNumber')) && !is_null($request->input('company'))) {
+            $company = User::where('email', $request->input('company'))->first();
+            if (count($company) > 0) {
+                $shipments = Shipment::where('tracking_number', 'like', '%' . $request->input('trackingNumber') . '%')->where('user_id', $company->id)->with('origen', 'destination')->get();
+            } else {
+                $shipments = Shipment::where('tracking_number', 'like', '%' . $request->input('trackingNumber') . '%')->with('origen', 'destination')->get();
             }
         }
 
-        return response()->json(['status'=>'success', 'data'=>$shipments]);
+        return response()->json(['status' => 'success', 'data' => $shipments]);
+    }
+
+    public function pick(Request $request)
+    {
+        $shipment = Shipment::find($request->id);
+        $shipment->picked = 1;
+        $shipment->save();
+        $shipment->origen;
+        $shipment->destination;
+
+        return response()->json(['status' => 'success', 'data' => $shipment]);
     }
 }
