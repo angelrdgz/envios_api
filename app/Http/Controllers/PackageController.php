@@ -91,6 +91,6 @@ class PackageController extends Controller
         $shipment->delete();
 
         $packages = $request->user()->packages()->get();
-        return response()->json(['status' => 'success', 'message' => $package], 200);
+        return response()->json(['status' => 'success', 'message' => $packages], 200);
     }
 }
