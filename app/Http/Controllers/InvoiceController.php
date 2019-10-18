@@ -16,7 +16,7 @@ class InvoiceController extends Controller
 
     public function index(Request $request)
     {
-        $invoices = Invoice::where('user_id', $request->user()->id)->whereRaw('MONTH(created_at) = "'.$request->get('month').'"')->get();
+        $invoices = Invoice::where('user_id', $request->user()->id)->whereRaw('MONTH(created_at) = "'.$request->get('month').'"')->with('payment')->get();
         //$factura = new FacturaController();
         //$invoices = $factura->invoices();
         return response()->json(['status'=>'success','data'=>$invoices], 200);
