@@ -89,6 +89,8 @@ class PackageController extends Controller
     {
         $shipment = Package::find($id);
         $shipment->delete();
-        return response()->json(['status' => 'success', 'message' => 'Shipment cancelled successfully'], 200);
+
+        $packages = $request->user()->packages()->get();
+        return response()->json(['status' => 'success', 'message' => $package], 200);
     }
 }
